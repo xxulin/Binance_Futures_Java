@@ -38,7 +38,7 @@ class WebsocketRequestImpl {
                 .shouldNotNull(symbol, "symbol")
                 .shouldNotNull(subscriptionListener, "listener");
         WebsocketRequest<AggregateTradeEvent> request = new WebsocketRequest<>(subscriptionListener, errorHandler);
-        request.name = "***Aggregate Trade for " + symbol + "***"; 
+        request.name = "***Aggregate Trade for " + symbol + "***";
         request.connectionHandler = (connection) -> connection.send(Channels.aggregateTradeChannel(symbol));
 
         request.jsonParser = (jsonWrapper) -> {
@@ -65,7 +65,7 @@ class WebsocketRequestImpl {
                 .shouldNotNull(symbol, "symbol")
                 .shouldNotNull(subscriptionListener, "listener");
         WebsocketRequest<MarkPriceEvent> request = new WebsocketRequest<>(subscriptionListener, errorHandler);
-        request.name = "***Mark Price for " + symbol + "***"; 
+        request.name = "***Mark Price for " + symbol + "***";
         request.connectionHandler = (connection) -> connection.send(Channels.markPriceChannel(symbol));
 
         request.jsonParser = (jsonWrapper) -> {
@@ -88,7 +88,7 @@ class WebsocketRequestImpl {
                 .shouldNotNull(symbol, "symbol")
                 .shouldNotNull(subscriptionListener, "listener");
         WebsocketRequest<CandlestickEvent> request = new WebsocketRequest<>(subscriptionListener, errorHandler);
-        request.name = "***Candlestick for " + symbol + "***"; 
+        request.name = "***Candlestick for " + symbol + "***";
         request.connectionHandler = (connection) -> connection.send(Channels.candlestickChannel(symbol, interval));
 
         request.jsonParser = (jsonWrapper) -> {
@@ -126,7 +126,7 @@ class WebsocketRequestImpl {
                 .shouldNotNull(symbol, "symbol")
                 .shouldNotNull(subscriptionListener, "listener");
         WebsocketRequest<SymbolMiniTickerEvent> request = new WebsocketRequest<>(subscriptionListener, errorHandler);
-        request.name = "***Individual Symbol Mini Ticker for " + symbol + "***"; 
+        request.name = "***Individual Symbol Mini Ticker for " + symbol + "***";
         request.connectionHandler = (connection) -> connection.send(Channels.miniTickerChannel(symbol));
 
         request.jsonParser = (jsonWrapper) -> {
@@ -151,7 +151,7 @@ class WebsocketRequestImpl {
         InputChecker.checker()
                 .shouldNotNull(subscriptionListener, "listener");
         WebsocketRequest<List<SymbolMiniTickerEvent>> request = new WebsocketRequest<>(subscriptionListener, errorHandler);
-        request.name = "***All Market Mini Tickers"; 
+        request.name = "***All Market Mini Tickers";
         request.connectionHandler = (connection) -> connection.send(Channels.miniTickerChannel());
 
         request.jsonParser = (jsonWrapper) -> {
@@ -182,7 +182,7 @@ class WebsocketRequestImpl {
                 .shouldNotNull(symbol, "symbol")
                 .shouldNotNull(subscriptionListener, "listener");
         WebsocketRequest<SymbolTickerEvent> request = new WebsocketRequest<>(subscriptionListener, errorHandler);
-        request.name = "***Individual Symbol Ticker for " + symbol + "***"; 
+        request.name = "***Individual Symbol Ticker for " + symbol + "***";
         request.connectionHandler = (connection) -> connection.send(Channels.tickerChannel(symbol));
 
         request.jsonParser = (jsonWrapper) -> {
@@ -216,7 +216,7 @@ class WebsocketRequestImpl {
         InputChecker.checker()
                 .shouldNotNull(subscriptionListener, "listener");
         WebsocketRequest<List<SymbolTickerEvent>> request = new WebsocketRequest<>(subscriptionListener, errorHandler);
-        request.name = "***All Market Tickers"; 
+        request.name = "***All Market Tickers";
         request.connectionHandler = (connection) -> connection.send(Channels.tickerChannel());
 
         request.jsonParser = (jsonWrapper) -> {
@@ -244,7 +244,7 @@ class WebsocketRequestImpl {
                 element.setCount(item.getLong("n"));
                 result.add(element);
             });
-           
+
             return result;
         };
         return request;
@@ -257,7 +257,7 @@ class WebsocketRequestImpl {
                 .shouldNotNull(symbol, "symbol")
                 .shouldNotNull(subscriptionListener, "listener");
         WebsocketRequest<SymbolBookTickerEvent> request = new WebsocketRequest<>(subscriptionListener, errorHandler);
-        request.name = "***Individual Symbol Book Ticker for " + symbol + "***"; 
+        request.name = "***Individual Symbol Book Ticker for " + symbol + "***";
         request.connectionHandler = (connection) -> connection.send(Channels.bookTickerChannel(symbol));
 
         request.jsonParser = (jsonWrapper) -> {
@@ -279,7 +279,7 @@ class WebsocketRequestImpl {
         InputChecker.checker()
                 .shouldNotNull(subscriptionListener, "listener");
         WebsocketRequest<SymbolBookTickerEvent> request = new WebsocketRequest<>(subscriptionListener, errorHandler);
-        request.name = "***All Market Book Tickers***"; 
+        request.name = "***All Market Book Tickers***";
         request.connectionHandler = (connection) -> connection.send(Channels.bookTickerChannel());
 
         request.jsonParser = (jsonWrapper) -> {
@@ -302,7 +302,7 @@ class WebsocketRequestImpl {
                 .shouldNotNull(symbol, "symbol")
                 .shouldNotNull(subscriptionListener, "listener");
         WebsocketRequest<LiquidationOrderEvent> request = new WebsocketRequest<>(subscriptionListener, errorHandler);
-        request.name = "***Individual Symbol Liquidation Order for " + symbol + "***"; 
+        request.name = "***Individual Symbol Liquidation Order for " + symbol + "***";
         request.connectionHandler = (connection) -> connection.send(Channels.liquidationOrderChannel(symbol));
 
         request.jsonParser = (jsonWrapper) -> {
@@ -332,7 +332,7 @@ class WebsocketRequestImpl {
         InputChecker.checker()
                 .shouldNotNull(subscriptionListener, "listener");
         WebsocketRequest<LiquidationOrderEvent> request = new WebsocketRequest<>(subscriptionListener, errorHandler);
-        request.name = "***All Liquidation Orders***"; 
+        request.name = "***All Liquidation Orders***";
         request.connectionHandler = (connection) -> connection.send(Channels.liquidationOrderChannel());
 
         request.jsonParser = (jsonWrapper) -> {
@@ -364,7 +364,7 @@ class WebsocketRequestImpl {
                 .shouldNotNull(limit, "limit")
                 .shouldNotNull(subscriptionListener, "listener");
         WebsocketRequest<OrderBookEvent> request = new WebsocketRequest<>(subscriptionListener, errorHandler);
-        request.name = "***Partial Book Depth for " + symbol + "***"; 
+        request.name = "***Partial Book Depth for " + symbol + "***";
         request.connectionHandler = (connection) -> connection.send(Channels.bookDepthChannel(symbol, limit));
 
         request.jsonParser = (jsonWrapper) -> {
@@ -396,7 +396,7 @@ class WebsocketRequestImpl {
                 askList.add(element);
             });
             result.setAsks(askList);
-            
+
             return result;
         };
         return request;
@@ -409,7 +409,7 @@ class WebsocketRequestImpl {
                 .shouldNotNull(symbol, "symbol")
                 .shouldNotNull(subscriptionListener, "listener");
         WebsocketRequest<OrderBookEvent> request = new WebsocketRequest<>(subscriptionListener, errorHandler);
-        request.name = "***Partial Book Depth for " + symbol + "***"; 
+        request.name = "***Partial Book Depth for " + symbol + "***";
         request.connectionHandler = (connection) -> connection.send(Channels.diffDepthChannel(symbol));
 
         request.jsonParser = (jsonWrapper) -> {
@@ -441,7 +441,7 @@ class WebsocketRequestImpl {
                 askList.add(element);
             });
             result.setAsks(askList);
-            
+
             return result;
         };
         return request;
@@ -454,7 +454,7 @@ class WebsocketRequestImpl {
                 .shouldNotNull(listenKey, "listenKey")
                 .shouldNotNull(subscriptionListener, "listener");
         WebsocketRequest<UserDataUpdateEvent> request = new WebsocketRequest<>(subscriptionListener, errorHandler);
-        request.name = "***User Data***"; 
+        request.name = "***User Data***";
         request.connectionHandler = (connection) -> connection.send(Channels.userDataChannel(listenKey));
 
         request.jsonParser = (jsonWrapper) -> {
@@ -472,12 +472,13 @@ class WebsocketRequestImpl {
                     BalanceUpdate balance = new BalanceUpdate();
                     balance.setAsset(item.getString("a"));
                     balance.setWalletBalance(item.getBigDecimal("wb"));
+                    balance.setCrossWalletBalance(item.getBigDecimal("cw"));
                     balanceList.add(balance);
                 });
                 accountUpdate.setBalances(balanceList);
 
                 List<PositionUpdate> positionList = new LinkedList<>();
-                JsonWrapperArray datalist = jsonWrapper.getJsonObject("a").getJsonArray("B");
+                JsonWrapperArray datalist = jsonWrapper.getJsonObject("a").getJsonArray("P");
                 datalist.forEach(item -> {
                     PositionUpdate position = new PositionUpdate();
                     position.setSymbol(item.getString("s"));
@@ -489,7 +490,7 @@ class WebsocketRequestImpl {
                 });
                 accountUpdate.setPositions(positionList);
 
-                result.setAccountUpdate(accountUpdate); 
+                result.setAccountUpdate(accountUpdate);
 
             } else if(jsonWrapper.getString("e").equals("ORDER_TRADE_UPDATE")) {
                 OrderUpdate orderUpdate = new OrderUpdate();
@@ -520,9 +521,10 @@ class WebsocketRequestImpl {
                 orderUpdate.setWorkingType(jsondata.getString("wt"));
                 orderUpdate.setActivationPrice(jsondata.getBigDecimalOrDefault("AP", BigDecimal.ZERO));
                 orderUpdate.setCallbackRate(jsondata.getBigDecimalOrDefault("cr", BigDecimal.ZERO));
-                result.setOrderUpdate(orderUpdate); 
+                orderUpdate.setRealizedProfit(jsondata.getBigDecimalOrDefault("rp", BigDecimal.ZERO));
+                result.setOrderUpdate(orderUpdate);
             }
-            
+
             return result;
         };
         return request;
