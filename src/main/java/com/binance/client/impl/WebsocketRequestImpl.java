@@ -486,6 +486,7 @@ class WebsocketRequestImpl {
                     position.setEntryPrice(item.getBigDecimal("ep"));
                     position.setPreFee(item.getBigDecimal("cr"));
                     position.setUnrealizedPnl(item.getBigDecimal("up"));
+                    position.setPositionSide(item.getString("ps"));
                     positionList.add(position);
                 });
                 accountUpdate.setPositions(positionList);

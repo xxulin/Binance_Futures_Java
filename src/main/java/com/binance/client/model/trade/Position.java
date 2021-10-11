@@ -4,6 +4,7 @@ import com.binance.client.constant.BinanceApiConstants;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class Position {
 
@@ -28,6 +29,8 @@ public class Position {
     private String maxNotional;
 
     private String positionSide;
+
+    private BigDecimal positionAmt;
 
     public Boolean getIsolated() {
         return isolated;
@@ -117,6 +120,18 @@ public class Position {
         this.positionSide = positionSide;
     }
 
+    public BigDecimal getPositionAmt() {
+        return positionAmt;
+    }
+
+    public void setPositionAmt(BigDecimal positionAmt) {
+        if (Objects.isNull(positionAmt)) {
+            this.positionAmt = BigDecimal.ZERO;
+        } else {
+            this.positionAmt = positionAmt;
+        }
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, BinanceApiConstants.TO_STRING_BUILDER_STYLE)
@@ -125,6 +140,6 @@ public class Position {
                 .append("positionInitialMargin", positionInitialMargin).append("symbol", symbol)
                 .append("unrealizedProfit", unrealizedProfit).append("entryPrice", entryPrice)
                 .append("maxNotional", maxNotional).append("positionSide", positionSide)
-                .append("isolated", isolated).toString();
+                .append("isolated", isolated).append("positionAmt", positionAmt).toString();
     }
 }

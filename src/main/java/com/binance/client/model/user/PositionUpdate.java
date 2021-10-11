@@ -16,6 +16,8 @@ public class PositionUpdate {
 
     private BigDecimal unrealizedPnl;
 
+    private String positionSide;
+
     public String getSymbol() {
         return symbol;
     }
@@ -56,10 +58,18 @@ public class PositionUpdate {
         this.unrealizedPnl = unrealizedPnl;
     }
 
+    public String getPositionSide() {
+        return positionSide;
+    }
+
+    public void setPositionSide(String positionSide) {
+        this.positionSide = positionSide;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, BinanceApiConstants.TO_STRING_BUILDER_STYLE).append("symbol", symbol)
                 .append("amount", amount).append("entryPrice", entryPrice).append("preFee", preFee)
-                .append("unrealizedPnl", unrealizedPnl).toString();
+                .append("unrealizedPnl", unrealizedPnl).append("positionSide", positionSide).toString();
     }
 }
