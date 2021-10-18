@@ -16,6 +16,8 @@ public class AccountInformation {
 
     private BigDecimal feeTier;
 
+    private BigDecimal availableBalance;
+
     private BigDecimal maxWithdrawAmount;
 
     private BigDecimal totalInitialMargin;
@@ -158,11 +160,19 @@ public class AccountInformation {
         this.positions = positions;
     }
 
+    public BigDecimal getAvailableBalance() {
+        return availableBalance;
+    }
+
+    public void setAvailableBalance(BigDecimal availableBalance) {
+        this.availableBalance = availableBalance;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, BinanceApiConstants.TO_STRING_BUILDER_STYLE).append("canDeposit", canDeposit)
                 .append("canTrade", canTrade).append("canWithdraw", canWithdraw).append("feeTier", feeTier)
-                .append("maxWithdrawAmount", maxWithdrawAmount).append("totalInitialMargin", totalInitialMargin)
+                .append("availableBalance", availableBalance).append("maxWithdrawAmount", maxWithdrawAmount).append("totalInitialMargin", totalInitialMargin)
                 .append("totalMaintMargin", totalMaintMargin).append("totalMarginBalance", totalMarginBalance)
                 .append("totalOpenOrderInitialMargin", totalOpenOrderInitialMargin)
                 .append("totalPositionInitialMargin", totalPositionInitialMargin)

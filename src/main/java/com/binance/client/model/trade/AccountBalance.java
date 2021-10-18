@@ -13,6 +13,8 @@ public class AccountBalance {
 
     private BigDecimal withdrawAvailable;
 
+    private BigDecimal availableBalance;
+
     public String getAsset() {
         return asset;
     }
@@ -37,9 +39,17 @@ public class AccountBalance {
         this.withdrawAvailable = withdrawAvailable;
     }
 
+    public BigDecimal getAvailableBalance() {
+        return availableBalance;
+    }
+
+    public void setAvailableBalance(BigDecimal availableBalance) {
+        this.availableBalance = availableBalance;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, BinanceApiConstants.TO_STRING_BUILDER_STYLE).append("asset", asset)
-                .append("balance", balance).append("withdrawAvailable", withdrawAvailable).toString();
+                .append("balance", balance).append("availableBalance", availableBalance).append("withdrawAvailable", withdrawAvailable).toString();
     }
 }

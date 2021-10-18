@@ -971,6 +971,7 @@ class RestApiRequestImpl {
             result.setCanWithdraw(jsonWrapper.getBoolean("canWithdraw"));
             result.setFeeTier(jsonWrapper.getBigDecimal("feeTier"));
             result.setMaxWithdrawAmount(jsonWrapper.getBigDecimal("maxWithdrawAmount"));
+            result.setAvailableBalance(jsonWrapper.getBigDecimal("availableBalance"));
             result.setTotalInitialMargin(jsonWrapper.getBigDecimal("totalInitialMargin"));
             result.setTotalMaintMargin(jsonWrapper.getBigDecimal("totalMaintMargin"));
             result.setTotalMarginBalance(jsonWrapper.getBigDecimal("totalMarginBalance"));
