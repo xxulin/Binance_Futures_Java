@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.binance.sdk</groupId>
-    <artifactId>binance-client-future</artifactId>
+    <artifactId>binance-client-spot</artifactId>
     <version>1.0.9-SNAPSHOT</version>
 
     <properties>
