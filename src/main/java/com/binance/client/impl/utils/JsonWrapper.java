@@ -6,11 +6,7 @@ import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.binance.client.exception.BinanceApiException;
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
+import java.util.*;
 
 public class JsonWrapper {
 
@@ -214,6 +210,15 @@ public class JsonWrapper {
             temp.put(key, this.getString(key));
             result.add(temp);
         });
+        return result;
+    }
+
+    public Map<String, String> convert2Map() {
+        Map<String, String> result = new HashMap<>();
+        Set<String> keys = this.json.keySet();
+        for (String key : keys) {
+            result.put(key, json.getString(key));
+        }
         return result;
     }
 
