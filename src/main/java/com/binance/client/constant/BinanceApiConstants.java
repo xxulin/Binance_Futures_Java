@@ -10,7 +10,7 @@ public class BinanceApiConstants {
     /**
      * REST API base URL.
      */
-    public static final String API_BASE_URL = "https://fapi.binance.com";
+    public static final String API_BASE_URL = "https://api.binance.com";
 
     /**
      * Streaming API base URL.
@@ -37,7 +37,7 @@ public class BinanceApiConstants {
     /**
      * Default receiving window.
      */
-    public static final long DEFAULT_RECEIVING_WINDOW = 60_000L;
+    public static final long DEFAULT_RECEIVING_WINDOW = 2_000L;
 
     /**
      * Default ToStringStyle used by toString methods. Override this to change the
