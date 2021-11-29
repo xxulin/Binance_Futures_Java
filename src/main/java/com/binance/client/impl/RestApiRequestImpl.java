@@ -14,6 +14,7 @@ import com.binance.client.model.trade.*;
 import okhttp3.Request;
 import org.apache.commons.lang3.StringUtils;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -933,60 +934,37 @@ class RestApiRequestImpl {
     RestApiRequest<AccountInformation> getAccountInformation() {
         RestApiRequest<AccountInformation> request = new RestApiRequest<>();
         UrlParamsBuilder builder = UrlParamsBuilder.build();
-        request.request = createRequestByGetWithSignature("/fapi/v1/account", builder);
+        request.request = createRequestByGetWithSignature("/api/v3/account", builder);
 
         request.jsonParser = (jsonWrapper -> {
             AccountInformation result = new AccountInformation();
-            result.setCanDeposit(jsonWrapper.getBoolean("canDeposit"));
+            result.setMakerCommission(jsonWrapper.getBigDecimal("makerCommission"));
+            result.setTakerCommission(jsonWrapper.getBigDecimal("takerCommission"));
+            result.setBuyerCommission(jsonWrapper.getBigDecimal("buyerCommission"));
+            result.setSellerCommission(jsonWrapper.getBigDecimal("sellerCommission"));
             result.setCanTrade(jsonWrapper.getBoolean("canTrade"));
             result.setCanWithdraw(jsonWrapper.getBoolean("canWithdraw"));
-            result.setFeeTier(jsonWrapper.getBigDecimal("feeTier"));
-            result.setMaxWithdrawAmount(jsonWrapper.getBigDecimal("maxWithdrawAmount"));
-            result.setAvailableBalance(jsonWrapper.getBigDecimal("availableBalance"));
-            result.setTotalInitialMargin(jsonWrapper.getBigDecimal("totalInitialMargin"));
-            result.setTotalMaintMargin(jsonWrapper.getBigDecimal("totalMaintMargin"));
-            result.setTotalMarginBalance(jsonWrapper.getBigDecimal("totalMarginBalance"));
-            result.setTotalOpenOrderInitialMargin(jsonWrapper.getBigDecimal("totalOpenOrderInitialMargin"));
-            result.setTotalPositionInitialMargin(jsonWrapper.getBigDecimal("totalPositionInitialMargin"));
-            result.setTotalUnrealizedProfit(jsonWrapper.getBigDecimal("totalUnrealizedProfit"));
-            result.setTotalWalletBalance(jsonWrapper.getBigDecimal("totalWalletBalance"));
+            result.setCanDeposit(jsonWrapper.getBoolean("canDeposit"));
             result.setUpdateTime(jsonWrapper.getLong("updateTime"));
+            result.setAccountType(jsonWrapper.getString("accountType"));
 
-            List<Asset> assetList = new LinkedList<>();
-            JsonWrapperArray assetArray = jsonWrapper.getJsonArray("assets");
-            assetArray.forEach((item) -> {
-                Asset element = new Asset();
+            List<Balance> balances = new LinkedList<>();
+            JsonWrapperArray balanceArray = jsonWrapper.getJsonArray("balances");
+            balanceArray.forEach((item) -> {
+
+                BigDecimal free = item.getBigDecimal("free");
+                if(free.compareTo(BigDecimal.ZERO) <= 0) {
+                    return;
+                }
+
+                Balance element = new Balance();
                 element.setAsset(item.getString("asset"));
-                element.setInitialMargin(item.getBigDecimal("initialMargin"));
-                element.setMaintMargin(item.getBigDecimal("maintMargin"));
-                element.setMarginBalance(item.getBigDecimal("marginBalance"));
-                element.setMaxWithdrawAmount(item.getBigDecimal("maxWithdrawAmount"));
-                element.setOpenOrderInitialMargin(item.getBigDecimal("openOrderInitialMargin"));
-                element.setPositionInitialMargin(item.getBigDecimal("positionInitialMargin"));
-                element.setUnrealizedProfit(item.getBigDecimal("unrealizedProfit"));
-                assetList.add(element);
+                element.setFree(free);
+                element.setLocked(item.getBigDecimal("locked"));
+                balances.add(element);
             });
-            result.setAssets(assetList);
+            result.setBalances(balances);
 
-            List<Position> positionList = new LinkedList<>();
-            JsonWrapperArray positionArray = jsonWrapper.getJsonArray("positions");
-            positionArray.forEach((item) -> {
-                Position element = new Position();
-                element.setIsolated(item.getBoolean("isolated"));
-                element.setLeverage(item.getBigDecimal("leverage"));
-                element.setInitialMargin(item.getBigDecimal("initialMargin"));
-                element.setMaintMargin(item.getBigDecimal("maintMargin"));
-                element.setOpenOrderInitialMargin(item.getBigDecimal("openOrderInitialMargin"));
-                element.setPositionInitialMargin(item.getBigDecimal("positionInitialMargin"));
-                element.setSymbol(item.getString("symbol"));
-                element.setUnrealizedProfit(item.getBigDecimal("unrealizedProfit"));
-                element.setEntryPrice(item.getString("entryPrice"));
-                element.setMaxNotional(item.getString("maxNotional"));
-                element.setPositionSide(item.getString("positionSide"));
-                element.setPositionAmt(item.getBigDecimal("positionAmt"));
-                positionList.add(element);
-            });
-            result.setPositions(positionList);
             return result;
         });
         return request;
