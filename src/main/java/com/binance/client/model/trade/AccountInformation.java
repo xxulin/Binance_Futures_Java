@@ -3,7 +3,7 @@ package com.binance.client.model.trade;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Map;
 
 @Data
 public class AccountInformation {
@@ -26,6 +26,6 @@ public class AccountInformation {
 
     private String accountType;
 
-    private List<Balance> balances;
+    private Map<String, Balance> balances;
 
 }

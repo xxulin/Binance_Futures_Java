@@ -13,4 +13,8 @@ public class Balance {
 
     private BigDecimal locked;
 
+    public BigDecimal getTotalStock() {
+        return free.add(locked);
+    }
+
 }

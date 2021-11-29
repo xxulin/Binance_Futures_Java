@@ -15,10 +15,7 @@ import okhttp3.Request;
 import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 class RestApiRequestImpl {
 
@@ -433,42 +430,37 @@ class RestApiRequestImpl {
         return request;
     }
 
-    RestApiRequest<List<PriceChangeTicker>> get24hrTickerPriceChange(String symbol) {
-        RestApiRequest<List<PriceChangeTicker>> request = new RestApiRequest<>();
+    RestApiRequest<PriceChangeTicker> get24hrTickerPriceChange(String symbol) {
+        RestApiRequest<PriceChangeTicker> request = new RestApiRequest<>();
         UrlParamsBuilder builder = UrlParamsBuilder.build()
                 .putToUrl("symbol", symbol);
-        request.request = createRequestByGet("/fapi/v1/ticker/24hr", builder);
+        request.request = createRequestByGet("/api/v3/ticker/24hr", builder);
 
         request.jsonParser = (jsonWrapper -> {
-            List<PriceChangeTicker> result = new LinkedList<>();
-            JsonWrapperArray dataArray = new JsonWrapperArray(new JSONArray());
-            if (jsonWrapper.containKey("data")) {
-                dataArray = jsonWrapper.getJsonArray("data");
-            } else {
-                dataArray.add(jsonWrapper.convert2JsonObject());
-            }
-            dataArray.forEach((item) -> {
-                PriceChangeTicker element = new PriceChangeTicker();
-                element.setSymbol(item.getString("symbol"));
-                element.setPriceChange(item.getBigDecimal("priceChange"));
-                element.setPriceChangePercent(item.getBigDecimal("priceChangePercent"));
-                element.setWeightedAvgPrice(item.getBigDecimal("weightedAvgPrice"));
-                element.setLastPrice(item.getBigDecimal("lastPrice"));
-                element.setLastQty(item.getBigDecimal("lastQty"));
-                element.setOpenPrice(item.getBigDecimal("openPrice"));
-                element.setHighPrice(item.getBigDecimal("highPrice"));
-                element.setLowPrice(item.getBigDecimal("lowPrice"));
-                element.setVolume(item.getBigDecimal("volume"));
-                element.setQuoteVolume(item.getBigDecimal("quoteVolume"));
-                element.setOpenTime(item.getLong("openTime"));
-                element.setCloseTime(item.getLong("closeTime"));
-                element.setFirstId(item.getLong("firstId"));
-                element.setLastId(item.getLong("lastId"));
-                element.setCount(item.getLong("count"));
-                result.add(element);
-            });
 
-            return result;
+            PriceChangeTicker element = new PriceChangeTicker();
+            element.setSymbol(jsonWrapper.getString("symbol"));
+            element.setPriceChange(jsonWrapper.getBigDecimal("priceChange"));
+            element.setPriceChangePercent(jsonWrapper.getBigDecimal("priceChangePercent"));
+            element.setWeightedAvgPrice(jsonWrapper.getBigDecimal("weightedAvgPrice"));
+            element.setLastPrice(jsonWrapper.getBigDecimal("lastPrice"));
+            element.setLastQty(jsonWrapper.getBigDecimal("lastQty"));
+            element.setBidPrice(jsonWrapper.getBigDecimal("bidPrice"));
+            element.setBidQty(jsonWrapper.getBigDecimal("bidQty"));
+            element.setAskPrice(jsonWrapper.getBigDecimal("askPrice"));
+            element.setAskQty(jsonWrapper.getBigDecimal("askQty"));
+            element.setOpenPrice(jsonWrapper.getBigDecimal("openPrice"));
+            element.setHighPrice(jsonWrapper.getBigDecimal("highPrice"));
+            element.setLowPrice(jsonWrapper.getBigDecimal("lowPrice"));
+            element.setVolume(jsonWrapper.getBigDecimal("volume"));
+            element.setQuoteVolume(jsonWrapper.getBigDecimal("quoteVolume"));
+            element.setOpenTime(jsonWrapper.getLong("openTime"));
+            element.setCloseTime(jsonWrapper.getLong("closeTime"));
+            element.setFirstId(jsonWrapper.getLong("firstId"));
+            element.setLastId(jsonWrapper.getLong("lastId"));
+            element.setCount(jsonWrapper.getLong("count"));
+
+            return element;
         });
         return request;
     }
@@ -948,12 +940,12 @@ class RestApiRequestImpl {
             result.setUpdateTime(jsonWrapper.getLong("updateTime"));
             result.setAccountType(jsonWrapper.getString("accountType"));
 
-            List<Balance> balances = new LinkedList<>();
+            Map<String, Balance> balances = new HashMap<>();
             JsonWrapperArray balanceArray = jsonWrapper.getJsonArray("balances");
             balanceArray.forEach((item) -> {
 
                 BigDecimal free = item.getBigDecimal("free");
-                if(free.compareTo(BigDecimal.ZERO) <= 0) {
+                if (free.compareTo(BigDecimal.ZERO) <= 0) {
                     return;
                 }
 
@@ -961,7 +953,7 @@ class RestApiRequestImpl {
                 element.setAsset(item.getString("asset"));
                 element.setFree(free);
                 element.setLocked(item.getBigDecimal("locked"));
-                balances.add(element);
+                balances.put(element.getAsset(), element);
             });
             result.setBalances(balances);
 

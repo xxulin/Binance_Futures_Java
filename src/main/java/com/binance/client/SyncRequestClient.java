@@ -116,7 +116,7 @@ public interface SyncRequestClient {
      *
      * @return 24 hour rolling window price change statistics.
      */
-    List<PriceChangeTicker> get24hrTickerPriceChange(String symbol);
+    PriceChangeTicker get24hrTickerPriceChange(String symbol);
 
     /**
      * Get latest price for a symbol or symbols.
