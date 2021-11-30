@@ -60,7 +60,7 @@ public interface SyncRequestClient {
      *
      * @return Current exchange trading rules and symbol information.
      */
-    ExchangeInformation getExchangeInformation();
+    ExchangeInformation getExchangeInformation(List<String> coin);
 
     /**
      * Fetch order book.

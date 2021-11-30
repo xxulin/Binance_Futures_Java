@@ -155,10 +155,15 @@ class RestApiRequestImpl {
         return createRequestWithApikey(serverUrl, address, builder);
     }
 
-    RestApiRequest<ExchangeInformation> getExchangeInformation() {
+    RestApiRequest<ExchangeInformation> getExchangeInformation(List<String> coin) {
         RestApiRequest<ExchangeInformation> request = new RestApiRequest<>();
         UrlParamsBuilder builder = UrlParamsBuilder.build();
-        request.request = createRequestByGet("/fapi/v1/exchangeInfo", builder);
+
+        if (Objects.nonNull(coin) && !coin.isEmpty()) {
+            builder.putToUrl("symbols", JSONObject.toJSONString(coin));
+        }
+
+        request.request = createRequestByGet("/api/v3/exchangeInfo", builder);
 
         request.jsonParser = (jsonWrapper -> {
             ExchangeInformation result = new ExchangeInformation();
@@ -194,16 +199,12 @@ class RestApiRequestImpl {
                 ExchangeInfoEntry symbol = new ExchangeInfoEntry();
                 symbol.setSymbol(item.getString("symbol"));
                 symbol.setStatus(item.getString("status"));
-                symbol.setMaintMarginPercent(item.getBigDecimal("maintMarginPercent"));
-                symbol.setRequiredMarginPercent(item.getBigDecimal("requiredMarginPercent"));
                 symbol.setBaseAsset(item.getString("baseAsset"));
-                symbol.setQuoteAsset(item.getString("quoteAsset"));
-                symbol.setPricePrecision(item.getLong("pricePrecision"));
-                symbol.setQuantityPrecision(item.getLong("quantityPrecision"));
                 symbol.setBaseAssetPrecision(item.getLong("baseAssetPrecision"));
+                symbol.setQuoteAsset(item.getString("quoteAsset"));
                 symbol.setQuotePrecision(item.getLong("quotePrecision"));
+                symbol.setQuoteAssetPrecision(item.getLong("quoteAssetPrecision"));
                 symbol.setOrderTypes(item.getJsonArray("orderTypes").convert2StringList());
-                symbol.setTimeInForce(item.getJsonArray("orderTypes").convert2StringList());
                 List<Map<String, String>> valList = new LinkedList<>();
                 JsonWrapperArray valArray = item.getJsonArray("filters");
                 valArray.forEach((val) -> {
