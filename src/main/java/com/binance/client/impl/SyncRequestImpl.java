@@ -7,6 +7,7 @@ import com.binance.client.model.enums.*;
 import com.binance.client.model.market.*;
 import com.binance.client.model.trade.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class SyncRequestImpl implements SyncRequestClient {
@@ -87,7 +88,7 @@ public class SyncRequestImpl implements SyncRequestClient {
 
     @Override
     public Order postOrder(String symbol, OrderSide side, OrderType orderType,
-                                    TimeInForce timeInForce, String quantity, String price,
+                                    TimeInForce timeInForce, BigDecimal quantity, BigDecimal price,
                                     String newClientOrderId, String stopPrice, NewOrderRespType newOrderRespType) {
         return RestApiInvoker.callSync(requestImpl.postOrder(symbol, side, orderType,
                 timeInForce, quantity, price,

@@ -594,7 +594,7 @@ class RestApiRequestImpl {
     }
 
     RestApiRequest<Order> postOrder(String symbol, OrderSide side, OrderType orderType,
-                                    TimeInForce timeInForce, String quantity, String price,
+                                    TimeInForce timeInForce, BigDecimal quantity, BigDecimal price,
                                     String newClientOrderId, String stopPrice, NewOrderRespType newOrderRespType) {
 
         RestApiRequest<Order> request = new RestApiRequest<>();

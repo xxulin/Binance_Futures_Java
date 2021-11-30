@@ -7,6 +7,7 @@ import com.binance.client.model.enums.*;
 import com.binance.client.model.market.*;
 import com.binance.client.model.trade.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -153,7 +154,7 @@ public interface SyncRequestClient {
      * @return Order.
      */
     Order postOrder(String symbol, OrderSide side, OrderType orderType,
-                    TimeInForce timeInForce, String quantity, String price,
+                    TimeInForce timeInForce, BigDecimal quantity, BigDecimal price,
                     String newClientOrderId, String stopPrice, NewOrderRespType newOrderRespType);
 
     /**
