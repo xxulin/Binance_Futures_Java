@@ -760,11 +760,11 @@ class RestApiRequestImpl {
         return request;
     }
 
-    RestApiRequest<ResponseResult> cancelAllOpenOrder(String symbol) {
+    RestApiRequest<ResponseResult> cancelOpenOrders(String symbol) {
         RestApiRequest<ResponseResult> request = new RestApiRequest<>();
         UrlParamsBuilder builder = UrlParamsBuilder.build()
                 .putToUrl("symbol", symbol);
-        request.request = createRequestByDeleteWithSignature("/fapi/v1/allOpenOrders", builder);
+        request.request = createRequestByDeleteWithSignature("/api/v3/openOrders", builder);
 
         request.jsonParser = (jsonWrapper -> {
             ResponseResult responseResult = new ResponseResult();

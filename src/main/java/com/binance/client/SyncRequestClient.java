@@ -169,7 +169,7 @@ public interface SyncRequestClient {
      *
      * @return ResponseResult.
      */
-    ResponseResult cancelAllOpenOrder(String symbol);
+    ResponseResult cancelOpenOrders(String symbol);
 
     /**
      * Batch cancel orders.

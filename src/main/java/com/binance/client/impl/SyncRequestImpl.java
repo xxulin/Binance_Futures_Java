@@ -101,8 +101,8 @@ public class SyncRequestImpl implements SyncRequestClient {
     }
 
     @Override
-    public ResponseResult cancelAllOpenOrder(String symbol) {
-        return RestApiInvoker.callSync(requestImpl.cancelAllOpenOrder(symbol));
+    public ResponseResult cancelOpenOrders(String symbol) {
+        return RestApiInvoker.callSync(requestImpl.cancelOpenOrders(symbol));
     }
 
     @Override
