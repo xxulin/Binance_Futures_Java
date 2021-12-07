@@ -617,14 +617,17 @@ class RestApiRequestImpl {
             result.setOrderId(jsonWrapper.getLong("orderId"));
             result.setClientOrderId(jsonWrapper.getString("clientOrderId"));
             result.setTransactTime(jsonWrapper.getLong("transactTime"));
-            result.setPrice(jsonWrapper.getBigDecimal("price"));
-            result.setOrigQty(jsonWrapper.getBigDecimal("origQty"));
-            result.setExecutedQty(jsonWrapper.getBigDecimal("executedQty"));
-            result.setCummulativeQuoteQty(jsonWrapper.getBigDecimal("cummulativeQuoteQty"));
-            result.setStatus(jsonWrapper.getString("status"));
-            result.setTimeInForce(jsonWrapper.getString("timeInForce"));
-            result.setType(jsonWrapper.getString("type"));
-            result.setSide(jsonWrapper.getString("side"));
+
+            if (!NewOrderRespType.ACK.equals(newOrderRespType)) {
+                result.setPrice(jsonWrapper.getBigDecimal("price"));
+                result.setOrigQty(jsonWrapper.getBigDecimal("origQty"));
+                result.setExecutedQty(jsonWrapper.getBigDecimal("executedQty"));
+                result.setCummulativeQuoteQty(jsonWrapper.getBigDecimal("cummulativeQuoteQty"));
+                result.setStatus(jsonWrapper.getString("status"));
+                result.setTimeInForce(jsonWrapper.getString("timeInForce"));
+                result.setType(jsonWrapper.getString("type"));
+                result.setSide(jsonWrapper.getString("side"));
+            }
 
             List<OrderFill> fillList = new ArrayList<>();
             if (jsonWrapper.containKey("fills")) {
@@ -880,7 +883,7 @@ class RestApiRequestImpl {
                 .putToUrl("startTime", startTime)
                 .putToUrl("endTime", endTime)
                 .putToUrl("limit", limit);
-        request.request = createRequestByGetWithSignature("/fapi/v1/allOrders", builder);
+        request.request = createRequestByGetWithSignature("/api/v3/allOrders", builder);
 
         request.jsonParser = (jsonWrapper -> {
             List<Order> result = new LinkedList<>();
@@ -1086,7 +1089,7 @@ class RestApiRequestImpl {
         RestApiRequest<String> request = new RestApiRequest<>();
         UrlParamsBuilder builder = UrlParamsBuilder.build();
 
-        request.request = createRequestByPostWithSignature("/fapi/v1/listenKey", builder);
+        request.request = createRequestByPostWithSignature("/api/v3/userDataStream", builder);
 
         request.jsonParser = (jsonWrapper -> {
             String result = jsonWrapper.getString("listenKey");
