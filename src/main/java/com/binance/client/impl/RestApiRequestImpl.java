@@ -13,6 +13,7 @@ import com.binance.client.model.trade.*;
 import okhttp3.Request;
 import org.apache.commons.lang3.StringUtils;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -961,7 +962,7 @@ class RestApiRequestImpl {
     RestApiRequest<AccountInformation> getAccountInformation() {
         RestApiRequest<AccountInformation> request = new RestApiRequest<>();
         UrlParamsBuilder builder = UrlParamsBuilder.build();
-        request.request = createRequestByGetWithSignature("/fapi/v1/account", builder);
+        request.request = createRequestByGetWithSignature("/fapi/v2/account", builder);
 
         request.jsonParser = (jsonWrapper -> {
             AccountInformation result = new AccountInformation();
@@ -992,6 +993,7 @@ class RestApiRequestImpl {
                 element.setOpenOrderInitialMargin(item.getBigDecimal("openOrderInitialMargin"));
                 element.setPositionInitialMargin(item.getBigDecimal("positionInitialMargin"));
                 element.setUnrealizedProfit(item.getBigDecimal("unrealizedProfit"));
+                element.setAvailableBalance(item.getBigDecimal("availableBalance"));
                 assetList.add(element);
             });
             result.setAssets(assetList);
@@ -999,6 +1001,12 @@ class RestApiRequestImpl {
             List<Position> positionList = new LinkedList<>();
             JsonWrapperArray positionArray = jsonWrapper.getJsonArray("positions");
             positionArray.forEach((item) -> {
+
+                BigDecimal positionAmt = item.getBigDecimal("positionAmt");
+                if (BigDecimal.ZERO.compareTo(positionAmt) >= 0) {
+                    return;
+                }
+
                 Position element = new Position();
                 element.setIsolated(item.getBoolean("isolated"));
                 element.setLeverage(item.getBigDecimal("leverage"));
@@ -1011,7 +1019,7 @@ class RestApiRequestImpl {
                 element.setEntryPrice(item.getString("entryPrice"));
                 element.setMaxNotional(item.getString("maxNotional"));
                 element.setPositionSide(item.getString("positionSide"));
-                element.setPositionAmt(item.getBigDecimal("positionAmt"));
+                element.setPositionAmt(positionAmt);
                 positionList.add(element);
             });
             result.setPositions(positionList);
