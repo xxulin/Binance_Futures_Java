@@ -472,28 +472,17 @@ class RestApiRequestImpl {
         return request;
     }
 
-    RestApiRequest<List<SymbolPrice>> getSymbolPriceTicker(String symbol) {
-        RestApiRequest<List<SymbolPrice>> request = new RestApiRequest<>();
+    RestApiRequest<SymbolPrice> getSymbolPriceTicker(String symbol) {
+        RestApiRequest<SymbolPrice> request = new RestApiRequest<>();
         UrlParamsBuilder builder = UrlParamsBuilder.build()
                 .putToUrl("symbol", symbol);
         request.request = createRequestByGet("/fapi/v1/ticker/price", builder);
 
         request.jsonParser = (jsonWrapper -> {
-            List<SymbolPrice> result = new LinkedList<>();
-            JsonWrapperArray dataArray = new JsonWrapperArray(new JSONArray());
-            if (jsonWrapper.containKey("data")) {
-                dataArray = jsonWrapper.getJsonArray("data");
-            } else {
-                dataArray.add(jsonWrapper.convert2JsonObject());
-            }
-            dataArray.forEach((item) -> {
-                SymbolPrice element = new SymbolPrice();
-                element.setSymbol(item.getString("symbol"));
-                element.setPrice(item.getBigDecimal("price"));
-                result.add(element);
-            });
-
-            return result;
+            SymbolPrice element = new SymbolPrice();
+            element.setSymbol(jsonWrapper.getString("symbol"));
+            element.setPrice(jsonWrapper.getBigDecimal("price"));
+            return element;
         });
         return request;
     }
