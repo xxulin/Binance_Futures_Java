@@ -10,6 +10,7 @@ import com.binance.client.model.ResponseResult;
 import com.binance.client.model.enums.*;
 import com.binance.client.model.market.*;
 import com.binance.client.model.trade.*;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.Request;
 import org.apache.commons.lang3.StringUtils;
 
@@ -19,6 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 class RestApiRequestImpl {
 
     private String apiKey;
@@ -32,7 +34,6 @@ class RestApiRequestImpl {
     }
 
     private Request createRequestByGet(String address, UrlParamsBuilder builder) {
-        System.out.println(serverUrl);
         return createRequestByGet(serverUrl, address, builder);
     }
 
@@ -42,7 +43,6 @@ class RestApiRequestImpl {
 
     private Request createRequest(String url, String address, UrlParamsBuilder builder) {
         String requestUrl = url + address;
-        System.out.print(requestUrl);
         if (builder != null) {
             if (builder.hasPostParam()) {
                 return new Request.Builder().url(requestUrl).post(builder.buildPostBody())
@@ -607,7 +607,8 @@ class RestApiRequestImpl {
 
     RestApiRequest<Order> postOrder(String symbol, OrderSide side, PositionSide positionSide, OrderType orderType,
                                     TimeInForce timeInForce, String quantity, String price, String reduceOnly,
-                                    String newClientOrderId, String stopPrice, WorkingType workingType, NewOrderRespType newOrderRespType) {
+                                    String newClientOrderId, String stopPrice, WorkingType workingType, NewOrderRespType newOrderRespType,
+                                    String callbackRate, String activationPrice) {
         RestApiRequest<Order> request = new RestApiRequest<>();
         UrlParamsBuilder builder = UrlParamsBuilder.build()
                 .putToUrl("symbol", symbol)
@@ -621,7 +622,9 @@ class RestApiRequestImpl {
                 .putToUrl("newClientOrderId", newClientOrderId)
                 .putToUrl("stopPrice", stopPrice)
                 .putToUrl("workingType", workingType)
-                .putToUrl("newOrderRespType", newOrderRespType);
+                .putToUrl("newOrderRespType", newOrderRespType)
+                .putToUrl("activationPrice", activationPrice)
+                .putToUrl("callbackRate", callbackRate);
 
         request.request = createRequestByPostWithSignature("/fapi/v1/order", builder);
 
@@ -1003,9 +1006,6 @@ class RestApiRequestImpl {
             positionArray.forEach((item) -> {
 
                 BigDecimal positionAmt = item.getBigDecimal("positionAmt");
-                if (BigDecimal.ZERO.compareTo(positionAmt) >= 0) {
-                    return;
-                }
 
                 Position element = new Position();
                 element.setIsolated(item.getBoolean("isolated"));
