@@ -61,6 +61,7 @@ public class WebSocketConnection extends WebSocketListener {
             log.info("[Sub][" + this.connectionId + "] Already connected");
             return;
         }
+        watchDog.onClosedNormally(this);
         log.info("[Sub][" + this.connectionId + "] Connecting...");
         webSocket = RestApiInvoker.createWebSocket(okhttpRequest, this);
     }
