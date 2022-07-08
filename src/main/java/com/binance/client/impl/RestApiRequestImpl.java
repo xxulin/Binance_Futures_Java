@@ -261,7 +261,7 @@ class RestApiRequestImpl {
         UrlParamsBuilder builder = UrlParamsBuilder.build()
                 .putToUrl("symbol", symbol)
                 .putToUrl("limit", limit);
-        request.request = createRequestByGet("/fapi/v1/trades", builder);
+        request.request = createRequestByGet("/api/v3/trades", builder);
 
         request.jsonParser = (jsonWrapper -> {
             List<Trade> result = new LinkedList<>();
@@ -271,9 +271,9 @@ class RestApiRequestImpl {
                 element.setId(item.getLong("id"));
                 element.setPrice(item.getBigDecimal("price"));
                 element.setQty(item.getBigDecimal("qty"));
-                element.setQuoteQty(item.getBigDecimal("quoteQty"));
                 element.setTime(item.getLong("time"));
                 element.setIsBuyerMaker(item.getBoolean("isBuyerMaker"));
+                element.setIsBestMatch(item.getBoolean("isBestMatch"));
                 result.add(element);
             });
 

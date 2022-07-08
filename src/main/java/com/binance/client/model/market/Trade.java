@@ -1,10 +1,12 @@
 package com.binance.client.model.market;
 
-import com.binance.client.constant.BinanceApiConstants;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import lombok.Data;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 
+@Data
+@ToString
 public class Trade {
 
     private Long id;
@@ -19,58 +21,6 @@ public class Trade {
 
     private Boolean isBuyerMaker;
 
-    public Long getId() {
-        return id;
-    }
+    private Boolean isBestMatch;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public BigDecimal getQty() {
-        return qty;
-    }
-
-    public void setQty(BigDecimal qty) {
-        this.qty = qty;
-    }
-
-    public BigDecimal getQuoteQty() {
-        return quoteQty;
-    }
-
-    public void setQuoteQty(BigDecimal quoteQty) {
-        this.quoteQty = quoteQty;
-    }
-
-    public Long getTime() {
-        return time;
-    }
-
-    public void setTime(Long time) {
-        this.time = time;
-    }
-
-    public Boolean getIsBuyerMaker() {
-        return isBuyerMaker;
-    }
-
-    public void setIsBuyerMaker(Boolean isBuyerMaker) {
-        this.isBuyerMaker = isBuyerMaker;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this, BinanceApiConstants.TO_STRING_BUILDER_STYLE).append("id", id)
-                .append("price", price).append("qty", qty).append("quoteQty", quoteQty).append("time", time)
-                .append("isBuyerMaker", isBuyerMaker).toString();
-    }
 }
