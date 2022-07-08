@@ -34,6 +34,8 @@ public class Order {
 
     private String side;
 
+    private Long updateTime;
+
     private List<OrderFill> fillList;
 
 }
