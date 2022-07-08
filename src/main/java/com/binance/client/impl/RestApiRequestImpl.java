@@ -744,7 +744,7 @@ class RestApiRequestImpl {
                 .putToUrl("symbol", symbol)
                 .putToUrl("orderId", orderId)
                 .putToUrl("origClientOrderId", origClientOrderId);
-        request.request = createRequestByDeleteWithSignature("/fapi/v1/order", builder);
+        request.request = createRequestByDeleteWithSignature("/api/v3/order", builder);
 
         request.jsonParser = (jsonWrapper -> {
             Order result = new Order();
