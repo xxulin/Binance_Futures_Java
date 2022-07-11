@@ -30,7 +30,6 @@ class RestApiRequestImpl {
     }
 
     private Request createRequestByGet(String address, UrlParamsBuilder builder) {
-        System.out.println(serverUrl);
         return createRequestByGet(serverUrl, address, builder);
     }
 
@@ -828,7 +827,7 @@ class RestApiRequestImpl {
                 .putToUrl("symbol", symbol)
                 .putToUrl("orderId", orderId)
                 .putToUrl("origClientOrderId", origClientOrderId);
-        request.request = createRequestByGetWithSignature("/fapi/v1/order", builder);
+        request.request = createRequestByGetWithSignature("/api/v3/order", builder);
 
         request.jsonParser = (jsonWrapper -> {
             Order result = new Order();
