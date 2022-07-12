@@ -25,13 +25,6 @@ public final class BinanceApiInternalFactory {
 
     public SubscriptionClient createSubscriptionClient(SubscriptionOptions options) {
         SubscriptionOptions subscriptionOptions = new SubscriptionOptions(options);
-        RequestOptions requestOptions = new RequestOptions();
-        try {
-            String host = new URI(options.getUri()).getHost();
-            requestOptions.setUrl("https://" + host);
-        } catch (Exception e) {
-
-        }
         SubscriptionClient webSocketStreamClient = new WebSocketStreamClientImpl(subscriptionOptions);
         return webSocketStreamClient;
     }
