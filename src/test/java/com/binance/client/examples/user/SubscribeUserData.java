@@ -21,11 +21,11 @@ public class SubscribeUserData {
         syncRequestClient.keepUserDataStream(listenKey);
 
         // Close user data stream
-        syncRequestClient.closeUserDataStream(listenKey);
+        //syncRequestClient.closeUserDataStream(listenKey);
 
         SubscriptionClient client = SubscriptionClient.create();
 
-   
+
         client.subscribeUserDataEvent(listenKey, System.out::println, null);
 
     }
