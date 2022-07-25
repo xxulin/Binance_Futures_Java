@@ -4,6 +4,7 @@ import com.binance.client.RequestOptions;
 import com.binance.client.SubscriptionClient;
 import com.binance.client.SubscriptionOptions;
 import com.binance.client.SyncRequestClient;
+
 import java.net.URI;
 
 public final class BinanceApiInternalFactory {
@@ -25,6 +26,13 @@ public final class BinanceApiInternalFactory {
 
     public SubscriptionClient createSubscriptionClient(SubscriptionOptions options) {
         SubscriptionOptions subscriptionOptions = new SubscriptionOptions(options);
+        RequestOptions requestOptions = new RequestOptions();
+        try {
+            String host = new URI(options.getUri()).getHost();
+            requestOptions.setUrl("https://" + host);
+        } catch (Exception e) {
+
+        }
         SubscriptionClient webSocketStreamClient = new WebSocketStreamClientImpl(subscriptionOptions);
         return webSocketStreamClient;
     }

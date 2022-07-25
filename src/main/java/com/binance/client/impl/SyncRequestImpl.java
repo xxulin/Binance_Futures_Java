@@ -72,7 +72,7 @@ public class SyncRequestImpl implements SyncRequestClient {
     }
 
     @Override
-    public List<SymbolOrderBook> getSymbolOrderBookTicker(String symbol) {
+    public SymbolOrderBook getSymbolOrderBookTicker(String symbol) {
         return RestApiInvoker.callSync(requestImpl.getSymbolOrderBookTicker(symbol));
     }
 
@@ -89,10 +89,11 @@ public class SyncRequestImpl implements SyncRequestClient {
     @Override
     public Order postOrder(String symbol, OrderSide side, OrderType orderType,
                                     TimeInForce timeInForce, BigDecimal quantity, BigDecimal price,
-                                    String newClientOrderId, String stopPrice, NewOrderRespType newOrderRespType) {
+                                    String newClientOrderId, String stopPrice, NewOrderRespType newOrderRespType,
+                                    Long trailingDelta) {
         return RestApiInvoker.callSync(requestImpl.postOrder(symbol, side, orderType,
                 timeInForce, quantity, price,
-                newClientOrderId, stopPrice, newOrderRespType));
+                newClientOrderId, stopPrice, newOrderRespType, trailingDelta));
     }
 
     @Override

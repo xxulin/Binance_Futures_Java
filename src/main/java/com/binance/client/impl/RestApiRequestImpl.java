@@ -491,31 +491,23 @@ class RestApiRequestImpl {
         return request;
     }
 
-    RestApiRequest<List<SymbolOrderBook>> getSymbolOrderBookTicker(String symbol) {
-        RestApiRequest<List<SymbolOrderBook>> request = new RestApiRequest<>();
+    RestApiRequest<SymbolOrderBook> getSymbolOrderBookTicker(String symbol) {
+        RestApiRequest<SymbolOrderBook> request = new RestApiRequest<>();
         UrlParamsBuilder builder = UrlParamsBuilder.build()
                 .putToUrl("symbol", symbol);
-        request.request = createRequestByGet("/fapi/v1/ticker/bookTicker", builder);
+        request.request = createRequestByGet("/api/v3/ticker/bookTicker", builder);
 
         request.jsonParser = (jsonWrapper -> {
-            List<SymbolOrderBook> result = new LinkedList<>();
-            JsonWrapperArray dataArray = new JsonWrapperArray(new JSONArray());
-            if (jsonWrapper.containKey("data")) {
-                dataArray = jsonWrapper.getJsonArray("data");
-            } else {
-                dataArray.add(jsonWrapper.convert2JsonObject());
-            }
-            dataArray.forEach((item) -> {
-                SymbolOrderBook element = new SymbolOrderBook();
-                element.setSymbol(item.getString("symbol"));
-                element.setBidPrice(item.getBigDecimal("bidPrice"));
-                element.setBidQty(item.getBigDecimal("bidQty"));
-                element.setAskPrice(item.getBigDecimal("askPrice"));
-                element.setAskQty(item.getBigDecimal("askQty"));
-                result.add(element);
-            });
 
-            return result;
+            JSONObject item = jsonWrapper.convert2JsonObject();
+            SymbolOrderBook orderBook = new SymbolOrderBook();
+            orderBook.setSymbol(item.getString("symbol"));
+            orderBook.setBidPrice(item.getBigDecimal("bidPrice"));
+            orderBook.setBidQty(item.getBigDecimal("bidQty"));
+            orderBook.setAskPrice(item.getBigDecimal("askPrice"));
+            orderBook.setAskQty(item.getBigDecimal("askQty"));
+
+            return orderBook;
         });
         return request;
     }
@@ -594,7 +586,8 @@ class RestApiRequestImpl {
 
     RestApiRequest<Order> postOrder(String symbol, OrderSide side, OrderType orderType,
                                     TimeInForce timeInForce, BigDecimal quantity, BigDecimal price,
-                                    String newClientOrderId, String stopPrice, NewOrderRespType newOrderRespType) {
+                                    String newClientOrderId, String stopPrice, NewOrderRespType newOrderRespType,
+                                    Long trailingDelta) {
 
         RestApiRequest<Order> request = new RestApiRequest<>();
         UrlParamsBuilder builder = UrlParamsBuilder.build()
@@ -606,7 +599,8 @@ class RestApiRequestImpl {
                 .putToUrl("price", price)
                 .putToUrl("newClientOrderId", newClientOrderId)
                 .putToUrl("stopPrice", stopPrice)
-                .putToUrl("newOrderRespType", newOrderRespType);
+                .putToUrl("newOrderRespType", newOrderRespType)
+                .putToUrl("trailingDelta", trailingDelta);
 
         request.request = createRequestByPostWithSignature("/api/v3/order", builder);
 
@@ -1027,26 +1021,21 @@ class RestApiRequestImpl {
                 .putToUrl("endTime", endTime)
                 .putToUrl("fromId", fromId)
                 .putToUrl("limit", limit);
-        request.request = createRequestByGetWithSignature("/fapi/v1/userTrades", builder);
+        request.request = createRequestByGetWithSignature("/api/v3/myTrades", builder);
 
         request.jsonParser = (jsonWrapper -> {
             List<MyTrade> result = new LinkedList<>();
             JsonWrapperArray dataArray = jsonWrapper.getJsonArray("data");
             dataArray.forEach((item) -> {
                 MyTrade element = new MyTrade();
-                element.setIsBuyer(item.getBoolean("buyer"));
+                element.setIsBuyer(item.getBoolean("isBuyer"));
                 element.setCommission(item.getBigDecimal("commission"));
                 element.setCommissionAsset(item.getString("commissionAsset"));
-                element.setCounterPartyId(item.getLongOrDefault("counterPartyId", 0));
                 element.setOrderId(item.getLong("orderId"));
-                element.setIsMaker(item.getBoolean("maker"));
-                element.setOrderId(item.getLong("orderId"));
+                element.setIsMaker(item.getBoolean("isMaker"));
                 element.setPrice(item.getBigDecimal("price"));
                 element.setQty(item.getBigDecimal("qty"));
                 element.setQuoteQty(item.getBigDecimal("quoteQty"));
-                element.setRealizedPnl(item.getBigDecimal("realizedPnl"));
-                element.setSide(item.getString("side"));
-                element.setPositionSide(item.getString("positionSide"));
                 element.setSymbol(item.getString("symbol"));
                 element.setTime(item.getLong("time"));
                 result.add(element);
@@ -1088,7 +1077,7 @@ class RestApiRequestImpl {
         RestApiRequest<String> request = new RestApiRequest<>();
         UrlParamsBuilder builder = UrlParamsBuilder.build();
 
-        request.request = createRequestByPostWithSignature("/api/v3/userDataStream", builder);
+        request.request = createRequestWithApikey(serverUrl, "/api/v3/userDataStream", builder.setMethod("POST"));
 
         request.jsonParser = (jsonWrapper -> {
             String result = jsonWrapper.getString("listenKey");
@@ -1102,7 +1091,7 @@ class RestApiRequestImpl {
         UrlParamsBuilder builder = UrlParamsBuilder.build()
                 .putToUrl("listenKey", listenKey);
 
-        request.request = createRequestByPutWithSignature("/fapi/v1/listenKey", builder);
+        request.request = createRequestWithApikey(serverUrl, "/api/v3/userDataStream", builder.setMethod("PUT"));
 
         request.jsonParser = (jsonWrapper -> {
             String result = "Ok";

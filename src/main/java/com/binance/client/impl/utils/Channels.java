@@ -142,7 +142,7 @@ public abstract class Channels {
     public static String diffDepthChannel(String symbol) {
         JSONObject json = new JSONObject();
         JSONArray params = new JSONArray();
-        params.add(symbol + "@depth");
+        params.add(symbol + "@depth@100ms");
         json.put("params", params);
         json.put("id", System.currentTimeMillis());
         json.put("method", "SUBSCRIBE");

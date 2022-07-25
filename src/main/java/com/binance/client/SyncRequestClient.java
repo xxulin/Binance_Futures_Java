@@ -131,7 +131,7 @@ public interface SyncRequestClient {
      *
      * @return Best price/qty on the order book for a symbol or symbols.
      */
-    List<SymbolOrderBook> getSymbolOrderBookTicker(String symbol);
+    SymbolOrderBook getSymbolOrderBookTicker(String symbol);
 
     /**
      * Get all liquidation orders.
@@ -155,7 +155,8 @@ public interface SyncRequestClient {
      */
     Order postOrder(String symbol, OrderSide side, OrderType orderType,
                     TimeInForce timeInForce, BigDecimal quantity, BigDecimal price,
-                    String newClientOrderId, String stopPrice, NewOrderRespType newOrderRespType);
+                    String newClientOrderId, String stopPrice, NewOrderRespType newOrderRespType,
+                    Long trailingDelta);
 
     /**
      * Cancel an active order.

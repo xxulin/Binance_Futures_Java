@@ -8,7 +8,10 @@ import com.binance.client.impl.utils.JsonWrapperArray;
 import com.binance.client.model.enums.CandlestickInterval;
 import com.binance.client.model.event.*;
 import com.binance.client.model.market.OrderBookEntry;
-import com.binance.client.model.user.*;
+import com.binance.client.model.user.AccountUpdate;
+import com.binance.client.model.user.BalanceUpdate;
+import com.binance.client.model.user.OrderUpdate;
+import com.binance.client.model.user.UserDataUpdateEvent;
 
 import java.math.BigDecimal;
 import java.util.LinkedList;
@@ -20,8 +23,8 @@ class WebsocketRequestImpl {
     }
 
     WebsocketRequest<TradeEvent> subscribeTradeEvent(String symbol,
-                                                              SubscriptionListener<TradeEvent> subscriptionListener,
-                                                              SubscriptionErrorHandler errorHandler) {
+                                                     SubscriptionListener<TradeEvent> subscriptionListener,
+                                                     SubscriptionErrorHandler errorHandler) {
         InputChecker.checker()
                 .shouldNotNull(symbol, "symbol")
                 .shouldNotNull(subscriptionListener, "listener");
@@ -386,11 +389,9 @@ class WebsocketRequestImpl {
             OrderBookEvent result = new OrderBookEvent();
             result.setEventType(jsonWrapper.getString("e"));
             result.setEventTime(jsonWrapper.getLong("E"));
-            result.setTransactionTime(jsonWrapper.getLong("T"));
             result.setSymbol(jsonWrapper.getString("s"));
             result.setFirstUpdateId(jsonWrapper.getLong("U"));
             result.setLastUpdateId(jsonWrapper.getLong("u"));
-            result.setLastUpdateIdInlastStream(jsonWrapper.getLong("pu"));
 
             List<OrderBookEntry> elementList = new LinkedList<>();
             JsonWrapperArray dataArray = jsonWrapper.getJsonArray("b");
@@ -431,11 +432,9 @@ class WebsocketRequestImpl {
             OrderBookEvent result = new OrderBookEvent();
             result.setEventType(jsonWrapper.getString("e"));
             result.setEventTime(jsonWrapper.getLong("E"));
-            result.setTransactionTime(jsonWrapper.getLong("T"));
             result.setSymbol(jsonWrapper.getString("s"));
             result.setFirstUpdateId(jsonWrapper.getLong("U"));
             result.setLastUpdateId(jsonWrapper.getLong("u"));
-            result.setLastUpdateIdInlastStream(jsonWrapper.getLong("pu"));
 
             List<OrderBookEntry> elementList = new LinkedList<>();
             JsonWrapperArray dataArray = jsonWrapper.getJsonArray("b");
@@ -476,68 +475,42 @@ class WebsocketRequestImpl {
             UserDataUpdateEvent result = new UserDataUpdateEvent();
             result.setEventType(jsonWrapper.getString("e"));
             result.setEventTime(jsonWrapper.getLong("E"));
-            result.setTransactionTime(jsonWrapper.getLong("T"));
 
-            if (jsonWrapper.getString("e").equals("ACCOUNT_UPDATE")) {
+            if (jsonWrapper.getString("e").equals("outboundAccountPosition")) {
                 AccountUpdate accountUpdate = new AccountUpdate();
 
                 List<BalanceUpdate> balanceList = new LinkedList<>();
-                JsonWrapperArray dataArray = jsonWrapper.getJsonObject("a").getJsonArray("B");
+                JsonWrapperArray dataArray = jsonWrapper.getJsonArray("B");
                 dataArray.forEach(item -> {
                     BalanceUpdate balance = new BalanceUpdate();
                     balance.setAsset(item.getString("a"));
-                    balance.setWalletBalance(item.getBigDecimal("wb"));
-                    balance.setCrossWalletBalance(item.getBigDecimal("cw"));
+                    balance.setFreeStock(item.getBigDecimal("f"));
+                    balance.setLockedStock(item.getBigDecimal("l"));
                     balanceList.add(balance);
                 });
                 accountUpdate.setBalances(balanceList);
-
-                List<PositionUpdate> positionList = new LinkedList<>();
-                JsonWrapperArray datalist = jsonWrapper.getJsonObject("a").getJsonArray("P");
-                datalist.forEach(item -> {
-                    PositionUpdate position = new PositionUpdate();
-                    position.setSymbol(item.getString("s"));
-                    position.setAmount(item.getBigDecimal("pa"));
-                    position.setEntryPrice(item.getBigDecimal("ep"));
-                    position.setPreFee(item.getBigDecimal("cr"));
-                    position.setUnrealizedPnl(item.getBigDecimal("up"));
-                    position.setPositionSide(item.getString("ps"));
-                    positionList.add(position);
-                });
-                accountUpdate.setPositions(positionList);
-
                 result.setAccountUpdate(accountUpdate);
 
-            } else if (jsonWrapper.getString("e").equals("ORDER_TRADE_UPDATE")) {
+            } else if (jsonWrapper.getString("e").equals("executionReport")) {
                 OrderUpdate orderUpdate = new OrderUpdate();
-                JsonWrapper jsondata = jsonWrapper.getJsonObject("o");
-                orderUpdate.setSymbol(jsondata.getStringOrDefault("s", ""));
-                orderUpdate.setClientOrderId(jsondata.getString("c"));
-                orderUpdate.setSide(jsondata.getString("S"));
-                orderUpdate.setType(jsondata.getString("o"));
-                orderUpdate.setTimeInForce(jsondata.getString("f"));
-                orderUpdate.setOrigQty(jsondata.getBigDecimal("q"));
-                orderUpdate.setPrice(jsondata.getBigDecimal("p"));
-                orderUpdate.setAvgPrice(jsondata.getBigDecimal("ap"));
-                orderUpdate.setStopPrice(jsondata.getBigDecimal("sp"));
-                orderUpdate.setExecutionType(jsondata.getString("x"));
-                orderUpdate.setOrderStatus(jsondata.getString("X"));
-                orderUpdate.setOrderId(jsondata.getLong("i"));
-                orderUpdate.setLastFilledQty(jsondata.getBigDecimal("l"));
-                orderUpdate.setCumulativeFilledQty(jsondata.getBigDecimal("z"));
-                orderUpdate.setLastFilledPrice(jsondata.getBigDecimal("L"));
-                orderUpdate.setCommissionAsset(jsondata.getStringOrDefault("N", ""));
-                orderUpdate.setCommissionAmount(jsondata.getBigDecimalOrDefault("n", BigDecimal.ZERO));
-                orderUpdate.setOrderTradeTime(jsondata.getLong("T"));
-                orderUpdate.setTradeID(jsondata.getLong("t"));
-                orderUpdate.setBidsNotional(jsondata.getBigDecimal("b"));
-                orderUpdate.setAsksNotional(jsondata.getBigDecimal("a"));
-                orderUpdate.setIsMarkerSide(jsondata.getBoolean("m"));
-                orderUpdate.setIsReduceOnly(jsondata.getBoolean("R"));
-                orderUpdate.setWorkingType(jsondata.getString("wt"));
-                orderUpdate.setActivationPrice(jsondata.getBigDecimalOrDefault("AP", BigDecimal.ZERO));
-                orderUpdate.setCallbackRate(jsondata.getBigDecimalOrDefault("cr", BigDecimal.ZERO));
-                orderUpdate.setRealizedProfit(jsondata.getBigDecimalOrDefault("rp", BigDecimal.ZERO));
+                orderUpdate.setSymbol(jsonWrapper.getStringOrDefault("s", ""));
+                orderUpdate.setClientOrderId(jsonWrapper.getString("c"));
+                orderUpdate.setSide(jsonWrapper.getString("S"));
+                orderUpdate.setType(jsonWrapper.getString("o"));
+                orderUpdate.setTimeInForce(jsonWrapper.getString("f"));
+                orderUpdate.setOrigQty(jsonWrapper.getBigDecimal("q"));
+                orderUpdate.setPrice(jsonWrapper.getBigDecimal("p"));
+                orderUpdate.setExecutionType(jsonWrapper.getString("x"));
+                orderUpdate.setOrderStatus(jsonWrapper.getString("X"));
+                orderUpdate.setOrderId(jsonWrapper.getLong("i"));
+                orderUpdate.setLastFilledQty(jsonWrapper.getBigDecimal("l"));
+                orderUpdate.setCumulativeFilledQty(jsonWrapper.getBigDecimal("z"));
+                orderUpdate.setLastFilledPrice(jsonWrapper.getBigDecimal("L"));
+                orderUpdate.setCommissionAsset(jsonWrapper.getStringOrDefault("N", ""));
+                orderUpdate.setCommissionAmount(jsonWrapper.getBigDecimalOrDefault("n", BigDecimal.ZERO));
+                orderUpdate.setOrderTradeTime(jsonWrapper.getLong("T"));
+                orderUpdate.setTradeID(jsonWrapper.getLong("t"));
+                orderUpdate.setIsMarkerSide(jsonWrapper.getBoolean("m"));
                 result.setOrderUpdate(orderUpdate);
             }
 

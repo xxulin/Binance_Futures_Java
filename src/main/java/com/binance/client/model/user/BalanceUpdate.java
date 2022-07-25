@@ -1,45 +1,18 @@
 package com.binance.client.model.user;
 
-import com.binance.client.constant.BinanceApiConstants;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import lombok.Data;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 
+@Data
+@ToString
 public class BalanceUpdate {
 
     private String asset;
 
-    private BigDecimal walletBalance;
+    private BigDecimal freeStock;
 
-    private BigDecimal crossWalletBalance;
+    private BigDecimal lockedStock;
 
-    public String getAsset() {
-        return asset;
-    }
-
-    public void setAsset(String asset) {
-        this.asset = asset;
-    }
-
-    public BigDecimal getWalletBalance() {
-        return walletBalance;
-    }
-
-    public void setWalletBalance(BigDecimal walletBalance) {
-        this.walletBalance = walletBalance;
-    }
-
-    public BigDecimal getCrossWalletBalance() {
-        return crossWalletBalance;
-    }
-
-    public void setCrossWalletBalance(BigDecimal crossWalletBalance) {
-        this.crossWalletBalance = crossWalletBalance;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this, BinanceApiConstants.TO_STRING_BUILDER_STYLE).append("asset", asset)
-                .append("walletBalance", walletBalance).append("crossWalletBalance", crossWalletBalance).toString();
-    }
 }
