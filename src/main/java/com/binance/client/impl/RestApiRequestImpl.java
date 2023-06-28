@@ -1,5 +1,7 @@
 package com.binance.client.impl;
 
+import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.binance.client.RequestOptions;
@@ -472,17 +474,23 @@ class RestApiRequestImpl {
         return request;
     }
 
-    RestApiRequest<SymbolPrice> getSymbolPriceTicker(String symbol) {
-        RestApiRequest<SymbolPrice> request = new RestApiRequest<>();
-        UrlParamsBuilder builder = UrlParamsBuilder.build()
-                .putToUrl("symbol", symbol);
+    RestApiRequest<List<SymbolPrice>> getSymbolPriceTicker(String symbol) {
+        RestApiRequest<List<SymbolPrice>> request = new RestApiRequest<>();
+        UrlParamsBuilder builder = UrlParamsBuilder.build();
+        if (StrUtil.isNotBlank(symbol)) {
+            builder.putToUrl("symbol", symbol);
+        }
         request.request = createRequestByGet("/fapi/v1/ticker/price", builder);
 
         request.jsonParser = (jsonWrapper -> {
-            SymbolPrice element = new SymbolPrice();
-            element.setSymbol(jsonWrapper.getString("symbol"));
-            element.setPrice(jsonWrapper.getBigDecimal("price"));
-            return element;
+            List<SymbolPrice> result = new ArrayList<>();
+            jsonWrapper.getJsonArray("data").forEach(item -> {
+                SymbolPrice element = new SymbolPrice();
+                element.setSymbol(item.getString("symbol"));
+                element.setPrice(item.getBigDecimal("price"));
+                result.add(element);
+            });
+            return result;
         });
         return request;
     }
@@ -995,6 +1003,9 @@ class RestApiRequestImpl {
             positionArray.forEach((item) -> {
 
                 BigDecimal positionAmt = item.getBigDecimal("positionAmt");
+                if(BigDecimal.ZERO.compareTo(positionAmt) == 0) {
+                    return;
+                }
 
                 Position element = new Position();
                 element.setIsolated(item.getBoolean("isolated"));
@@ -1041,7 +1052,7 @@ class RestApiRequestImpl {
     RestApiRequest<List<PositionRisk>> getPositionRisk() {
         RestApiRequest<List<PositionRisk>> request = new RestApiRequest<>();
         UrlParamsBuilder builder = UrlParamsBuilder.build();
-        request.request = createRequestByGetWithSignature("/fapi/v1/positionRisk", builder);
+        request.request = createRequestByGetWithSignature("/fapi/v2/positionRisk", builder);
 
         request.jsonParser = (jsonWrapper -> {
             List<PositionRisk> result = new LinkedList<>();

@@ -449,7 +449,7 @@ class WebsocketRequestImpl {
             UserDataUpdateEvent result = new UserDataUpdateEvent();
             result.setEventType(jsonWrapper.getString("e"));
             result.setEventTime(jsonWrapper.getLong("E"));
-            result.setTransactionTime(jsonWrapper.getLong("T"));
+            result.setTransactionTime(jsonWrapper.getLongOrDefault("T", 0));
 
             if (jsonWrapper.getString("e").equals("listenKeyExpired")) {
                 result.setValidatedKey(false);
@@ -477,6 +477,7 @@ class WebsocketRequestImpl {
                     position.setPreFee(item.getBigDecimal("cr"));
                     position.setUnrealizedPnl(item.getBigDecimal("up"));
                     position.setPositionSide(item.getString("ps"));
+                    position.setMaintMargin(item.getBigDecimal("iw"));
                     positionList.add(position);
                 });
                 accountUpdate.setPositions(positionList);

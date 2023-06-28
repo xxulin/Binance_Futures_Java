@@ -123,7 +123,7 @@ public interface SyncRequestClient {
      *
      * @return Latest price for a symbol or symbols.
      */
-    SymbolPrice getSymbolPriceTicker(String symbol);
+    List<SymbolPrice> getSymbolPriceTicker(String symbol);
 
     /**
      * Get best price/qty on the order book for a symbol or symbols.

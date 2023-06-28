@@ -5,19 +5,27 @@ package com.binance.client.model.enums;
  */
 
 public enum OrderSide {
-  BUY("BUY"),
-  SELL("SELL");
+    BUY("BUY"),
+    SELL("SELL");
 
-  private final String code;
+    private final String code;
 
-  OrderSide(String side) {
-    this.code = side;
-  }
+    OrderSide(String side) {
+        this.code = side;
+    }
 
-  @Override
-  public String toString() {
-    return code;
-  }
+    @Override
+    public String toString() {
+        return code;
+    }
 
+    public static OrderSide getByCode(String code) {
+        for (OrderSide side : OrderSide.values()) {
+            if (code.equals(side.code)) {
+                return side;
+            }
+        }
+        return null;
+    }
 
 }

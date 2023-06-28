@@ -18,10 +18,11 @@ class WebSocketWatchDog {
 
     WebSocketWatchDog(SubscriptionOptions subscriptionOptions) {
         this.options = Objects.requireNonNull(subscriptionOptions);
-        long t = 1_000;
+        long t = 2_000;
         ScheduledExecutorService exec = Executors.newScheduledThreadPool(1);
         exec.scheduleAtFixedRate(() -> {
             TIME_HELPER.forEach(connection -> {
+                connection.send("pong");
                 if (connection.getState() == ConnectionState.CONNECTED) {
                     // Check response
                     if (options.isAutoReconnect()) {

@@ -3,6 +3,7 @@ package com.binance.client;
 import java.util.List;
 
 import com.binance.client.impl.BinanceApiInternalFactory;
+import com.binance.client.impl.WebSocketConnection;
 import com.binance.client.model.enums.CandlestickInterval;
 import com.binance.client.model.event.AggregateTradeEvent;
 import com.binance.client.model.event.CandlestickEvent;
@@ -45,6 +46,8 @@ public interface SubscriptionClient {
      * Unsubscribe all subscription.
      */
     void unsubscribeAll();
+
+    void unsubscribe(WebSocketConnection connection);
 
     /**
      * Subscribe aggregate trade event. If the aggregate trade is updated,
@@ -219,7 +222,7 @@ public interface SubscriptionClient {
      * @param errorHandler The error handler will be called if subscription failed
      *                     or error happen between client and Binance server.
      */
-    void subscribeUserDataEvent(String listenKey,
+    WebSocketConnection subscribeUserDataEvent(String listenKey,
             SubscriptionListener<UserDataUpdateEvent> callback, SubscriptionErrorHandler errorHandler);
 
 
